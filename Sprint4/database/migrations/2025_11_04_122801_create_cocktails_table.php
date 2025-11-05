@@ -11,13 +11,13 @@ return new class extends Migration
      */
     public function up(): void
     {
-       Schema::create('cocktails', function (Blueprint $table) {
-    $table->id();
-    $table->string('nombre', 100);
-    $table->longText('descripcion');
-    $table->longText('metodo_elaboracion');
-    $table->foreignId('usuario_id')->constrained('users')->onDelete('cascade'); // se conecta a la tabla users y si se borra el ususario se borran sus cocteles
-});
+        Schema::create('cocktails', function (Blueprint $table) {
+      $table->id();
+      $table->string('nombre', 100);
+      $table->longText('descripcion');
+      $table->longText('metodo_elaboracion');
+      $table->foreignId('usuario_id')->constrained('users')->onDelete('cascade'); // se conecta a la tabla users y si se borra el ususario se borran sus cocteles
+      });
 
     }
 
