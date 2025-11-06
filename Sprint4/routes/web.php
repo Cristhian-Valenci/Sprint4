@@ -18,6 +18,7 @@ Route::middleware('auth')->group(function () {
     Route::delete('/profile', [ProfileController::class, 'destroy'])->name('profile.destroy');
 });
 
-Route::get('/cocktails', [CocktailController::class, 'index'])->name('cocktails.index');
+
+Route::resource('cocktails', CocktailController::class);
 
 require __DIR__.'/auth.php';
