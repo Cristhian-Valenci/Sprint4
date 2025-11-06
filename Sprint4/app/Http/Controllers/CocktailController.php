@@ -23,16 +23,33 @@ class CocktailController extends Controller
      */
     public function create()
     {
-        //
+        return view('cocktails.create');
     }
 
     /**
      * Store a newly created resource in storage.
      */
-    public function store(Request $request)
-    {
-        //
+   public function store(Request $request)
+   {
+      // 1️⃣ Validamos los datos del formulario
+       $validated = $request->validate([
+           'nombre' => 'required|string|max:100',
+           'descripcion' => 'required|string',
+           'metodo_elaboracion' => 'required|string',
+        ]);
+
+      // 2️⃣ Creamos el cóctel asociado al usuario logueado
+       $cocktail = new Cocktail();
+       $cocktail->nombre = $validated['nombre'];
+       $cocktail->descripcion = $validated['descripcion'];
+       $cocktail->metodo_elaboracion = $validated['metodo_elaboracion'];
+       $cocktail->usuario_id = auth()->id(); // relacionamos el usuario autenticado
+       $cocktail->save();
+
+       // 3️⃣ Redirigimos con un mensaje de éxito
+       return redirect()->route('cocktails.index')->with('success', 'Cóctel creado correctamente.');
     }
+
 
     /**
      * Display the specified resource.

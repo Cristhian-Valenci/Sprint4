@@ -8,6 +8,13 @@ class Cocktail extends Model {
     
     public $timestamps = false;
 
+      protected $fillable = [
+          'nombre',
+          'descripcion',
+          'metodo_elaboracion',
+          'usuario_id',
+        ];
+
     public function usuario() {
       
         return $this->belongsTo(User::class, 'usuario_id'); //belongTo significa que cada Cocktail pertenece a un usuario

@@ -1,4 +1,4 @@
-
+<x-app-layout>
 <!DOCTYPE html>
 <html lang="es">
 <head>
@@ -30,3 +30,4 @@
     </table>
 </body>
 </html>
+</x-app-layout>
