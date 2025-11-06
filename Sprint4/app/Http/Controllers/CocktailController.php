@@ -12,7 +12,10 @@ class CocktailController extends Controller
      */
     public function index()
     {
-        //
+       $cocktails = \App\Models\Cocktail::all();
+
+       return view('index', compact('cocktails')); // con compact envio la variable a la vista
+
     }
 
     /**
