@@ -56,7 +56,9 @@ class CocktailController extends Controller
      */
     public function show(Cocktail $cocktail)
     {
-        //
+        $cocktails = [$cocktail];
+
+        return view('index', compact('cocktails'));
     }
 
     /**
@@ -64,7 +66,7 @@ class CocktailController extends Controller
      */
     public function edit(Cocktail $cocktail)
     {
-        //
+        return view('cocktails.edit', compact('cocktail'));
     }
 
     /**
@@ -72,7 +74,16 @@ class CocktailController extends Controller
      */
     public function update(Request $request, Cocktail $cocktail)
     {
-        //
+        $validated = $request->validate([
+            'nombre' => 'required|string|max:100',
+            'descripcion' => 'required|string',
+            'metodo_elaboracion' => 'required|string'
+        ]);
+
+        $cocktail->update($validated); //actualizo el coctel ya validado
+
+        return redirect()->route('cocktails.index');
+                        
     }
 
     /**
