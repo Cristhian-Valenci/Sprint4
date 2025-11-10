@@ -91,6 +91,9 @@ class CocktailController extends Controller
      */
     public function destroy(Cocktail $cocktail)
     {
-        //
+       $cocktail->delete(); 
+
+      return redirect()->route('cocktails.index') 
+                       ->with('success', 'Cóctel eliminado correctamente');
     }
 }
