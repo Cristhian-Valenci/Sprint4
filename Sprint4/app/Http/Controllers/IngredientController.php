@@ -32,11 +32,9 @@ class IngredientController extends Controller
      */
     public function store(IngredientRequest $request)
     {
-    
-        $validated = $request->validate();
           
         $ingredient = New Ingredient();
-        $ingredient->nombre = ucfirst($validated['nombre']); //con ucfirst, hacemos que todos los nombres se guarden con mayuscula al princio, que antes le sacamos para comparar los nombres y para que quede mas prolija la web y base de datos
+        $ingredient->nombre = ucfirst($request->nombre); //con ucfirst, hacemos que todos los nombres se guarden con mayuscula al princio, que antes le sacamos para comparar los nombres y para que quede mas prolija la web y base de datos
         $ingredient->save();
 
         return redirect()->route('ingredients.index');
@@ -63,11 +61,16 @@ class IngredientController extends Controller
     /**
      * Update the specified resource in storage.
      */
-    public function update(Request $request, Ingredient $ingredient)
+    public function update(IngredientRequest $request, Ingredient $ingredient)
     {
-        $validated = $request->validate([
-            'nombre' => 'required|string|max:100'
+        $nombre = ucfirst($request->nombre);
+
+        $ingredient->update([
+            'nombre' => $nombre
         ]);
+
+        return redirect()->route('ingredients.index')
+                         ->with('success', 'Ingrediente editado correctamente');
 
 
     }

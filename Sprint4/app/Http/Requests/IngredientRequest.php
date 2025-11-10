@@ -3,6 +3,7 @@
 namespace App\Http\Requests;
 
 use Illuminate\Foundation\Http\FormRequest;
+use Illuminate\Validation\Rule; 
 
 class IngredientRequest extends FormRequest
 {
@@ -32,8 +33,14 @@ class IngredientRequest extends FormRequest
          $ingredientId = $this->route('ingredient')?->id; //creo una variable para tener el mismo request para los 2 metodos, 
                                                           //para cuando edite me deje editar con el nombre que ya tenia y no me de error y me obligue a modificarlo.
         return [
-            'nombre' => 'required|string|max:100|regex:/^[A-Za-zÁÉÍÓÚáéíóúÑñ\s]+$/|unique:ingredients,nombre' . $ingredientId
-        ];
+             'nombre' => [
+                  'required',
+                   'string',
+                  'max:100',
+                  'regex:/^[A-Za-zÁÉÍÓÚáéíóúÑñ\s]+$/',
+                   Rule::unique('ingredients', 'nombre')->ignore($ingredientId),
+                ],
+            ];
     }
 
     public function messages() : array

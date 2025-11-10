@@ -8,7 +8,9 @@ class Ingredient extends Model {
     
     public $timestamps = false;
     
+    protected $fillable = ['nombre'];
 
+    
     public function cocktails() {
       
         return $this->belongsToMany(Cocktail::class, 'cocktail_ingredient')
