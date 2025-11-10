@@ -14,7 +14,7 @@ class IngredientController extends Controller
     {
         $ingredients = \App\Models\Ingredient::all();
 
-        return view('ingredient.index', compact('ingredients'));
+        return view('ingredients.index', compact('ingredients'));
     }
 
     /**
@@ -22,7 +22,7 @@ class IngredientController extends Controller
      */
     public function create()
     {
-        //
+        return view('ingredients.index');
     }
 
     /**
@@ -30,7 +30,25 @@ class IngredientController extends Controller
      */
     public function store(Request $request)
     {
-        //
+        $request->merge([ //merge es una funcion de Laravel que nos permite modificar el request(Osea, el Post, get, etc que haya enviado el usuario) antes de validarlo.
+           'nombre' => strtolower(trim($request->nombre))
+        ]);
+
+        $validated = $request->validate([
+           'nombre' => 'required|string|max:100'
+        ]);
+
+        $duplicated = Ingredient::where('nombre', $validated['nombre'])->exists();
+
+        if ($duplicated) {
+            return redirect()->route('ingredients.index')->with('error', 'El ingrediente ya existe');
+        }
+
+        $ingredient = New Ingredient();
+        $ingredient->nombre = ucfirst($validated['nombre']); //con ucfirst, hacemos que todos los nombres se guarden con mayuscula al princio, que antes le sacamos para comparar los nombres y para que quede mas prolija la web y base de datos
+        $ingredient->save();
+
+        return redirect()->route('ingredients.index');
     }
 
     /**
