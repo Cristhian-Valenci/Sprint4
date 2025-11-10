@@ -8,6 +8,11 @@
                     {{ session('success') }}
                 </div>
             @endif
+            @if(session('error'))
+                <div class="mb-4 p-2 bg-red-200 text-red-800 rounded">
+                     {{ session('error') }}
+                </div>
+            @endif
 
             <table class="min-w-full border border-gray-300">
                 <thead class="bg-gray-100">
@@ -28,6 +33,14 @@
                     @endforeach
                 </tbody>
             </table>
+            <<form action="{{ route('ingredients.store') }}" method="POST" class="flex gap-2">
+    @csrf
+    <input type="text" name="nombre" placeholder="Nuevo Ingrediente" required
+        class="flex-grow border px-3 py-2 rounded bg-gray-50" />
+    <button type="submit"
+        class="bg-gray-800 text-white px-4 py-2 rounded hover:bg-gray-700">Agregar</button>
+</form>
+
         </div>
     </div>
 </x-app-layout>
