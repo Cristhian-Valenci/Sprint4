@@ -8,11 +8,16 @@
                     {{ session('success') }}
                 </div>
             @endif
-            @if(session('error'))
-                <div class="mb-4 p-2 bg-red-200 text-red-800 rounded">
-                     {{ session('error') }}
-                </div>
-            @endif
+            @if ($errors->any())
+                 <div class="mb-4 p-2 bg-red-200 text-red-800 rounded">
+                      <ul>
+                          @foreach ($errors->all() as $error)
+                               <li>{{ $error }}</li>
+                            @endforeach
+                         </ul>
+                 </div>
+                @endif
+
 
             <table class="min-w-full border border-gray-300">
                 <thead class="bg-gray-100">
