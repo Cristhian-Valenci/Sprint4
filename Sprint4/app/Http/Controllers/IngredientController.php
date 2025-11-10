@@ -12,7 +12,9 @@ class IngredientController extends Controller
      */
     public function index()
     {
-        //
+        $ingredients = \App\Models\Ingredient::all();
+
+        return view('ingredient.index', compact('ingredients'));
     }
 
     /**
@@ -36,7 +38,9 @@ class IngredientController extends Controller
      */
     public function show(Ingredient $ingredient)
     {
-        //
+        $ingredients = [$ingredient];
+
+        return view('ingredient.index', compact('ingredients'));
     }
 
     /**
