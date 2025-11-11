@@ -12,7 +12,7 @@ class CocktailController extends Controller
      */
     public function index()
     {
-       $cocktails = \App\Models\Cocktail::all();
+       $cocktails = Cocktail::with('ingredients')->get();
 
        return view('index', compact('cocktails')); // con compact envio la variable a la vista
 
@@ -26,36 +26,39 @@ class CocktailController extends Controller
         return view('cocktails.create');
     }
 
-    /**
-     * Store a newly created resource in storage.
-     */
-   public function store(Request $request)
-   {
-      // 1️⃣ Validamos los datos del formulario
-       $validated = $request->validate([
-           'nombre' => 'required|string|max:100',
-           'descripcion' => 'required|string',
-           'metodo_elaboracion' => 'required|string',
-        ]);
 
-      // 2️⃣ Creamos el cóctel asociado al usuario logueado
+    public function store(CocktailRequest $request)
+    {
+   
        $cocktail = new Cocktail();
-       $cocktail->nombre = $validated['nombre'];
-       $cocktail->descripcion = $validated['descripcion'];
-       $cocktail->metodo_elaboracion = $validated['metodo_elaboracion'];
-       $cocktail->usuario_id = auth()->id(); // relacionamos el usuario autenticado
+       $cocktail->nombre = ucfirst($request->nombre); // ponemos la primera letra en mayúscula
+       $cocktail->descripcion = $request->descripcion;
+       $cocktail->metodo_elaboracion = $request->metodo_elaboracion;
+       $cocktail->usuario_id = auth()->id();
        $cocktail->save();
 
-       // 3️⃣ Redirigimos con un mensaje de éxito
-       return redirect()->route('cocktails.index')->with('success', 'Cóctel creado correctamente.');
-    }
+      //Guardamos los ingredientes en la tabla pivote
+       $ingredientesData = [];
+       foreach ($request->ingredients as $item) { // $request->ingredients es un array de ingredientes, por ejemplo: ['id' => 1, 'cantidad' => 50, 'unidad' => 'ml']
+           $ingredientesData[$item['id']] = [
+              'cantidad' => $item['cantidad'] ?? null,
+              'unidad' => $item['unidad'] ?? null,
+            ];
+        }
 
+        $cocktail->ingredients()->sync($ingredientesData); // sync guarda la relación muchos a muchos
+
+    
+        return redirect()->route('cocktails.index')
+                     ->with('success', 'Cóctel creado correctamente.');
+    }
 
     /**
      * Display the specified resource.
      */
     public function show(Cocktail $cocktail)
     {
+        $cocktail->load('ingredients');
         $cocktails = [$cocktail];
 
         return view('index', compact('cocktails'));
@@ -66,25 +69,39 @@ class CocktailController extends Controller
      */
     public function edit(Cocktail $cocktail)
     {
-        return view('cocktails.edit', compact('cocktail'));
+        $cocktail->load('ingredients');
+        $allIngredients = Ingredient::all();
+
+        return view('cocktails.edit', compact('cocktail', 'allIngredients'));
     }
 
     /**
      * Update the specified resource in storage.
      */
-    public function update(Request $request, Cocktail $cocktail)
+   
+    public function update(CocktailRequest $request, Cocktail $cocktail)
     {
-        $validated = $request->validate([
-            'nombre' => 'required|string|max:100',
-            'descripcion' => 'required|string',
-            'metodo_elaboracion' => 'required|string'
+        $cocktail->update([
+              'nombre' => ucfirst($request->nombre),
+              'descripcion' => $request->descripcion,
+              'metodo_elaboracion' => $request->metodo_elaboracion,
         ]);
 
-        $cocktail->update($validated); //actualizo el coctel ya validado
+        // Actualizar ingredientes en la tabla pivote
+        $ingredientesData = [];
+        foreach ($request->ingredients as $item) {
+            $ingredientesData[$item['id']] = [
+                'cantidad' => $item['cantidad'] ?? null,
+                'unidad' => $item['unidad'] ?? null,
+            ];
+        }
 
-        return redirect()->route('cocktails.index');
-                        
+        $cocktail->ingredients()->sync($ingredientesData);
+
+        return redirect()->route('cocktails.index')
+                         ->with('success', 'Cóctel actualizado correctamente.');
     }
+
 
     /**
      * Remove the specified resource from storage.
