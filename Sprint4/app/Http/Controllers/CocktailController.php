@@ -14,7 +14,7 @@ class CocktailController extends Controller
      */
     public function index()
     {
-       $cocktails = Cocktail::with('ingredients')->get();
+       $cocktails = \App\Models\Cocktail::with('ingredients')->get();
 
        return view('index', compact('cocktails')); // con compact envio la variable a la vista
 
@@ -30,31 +30,6 @@ class CocktailController extends Controller
         return view('cocktails.create', compact('ingredients'));
     }
 
-    /**
-     * Store a newly created resource in storage.
-     */
-   /*public function store(Request $request)
-   {
-      // 1️⃣ Validamos los datos del formulario
-       $validated = $request->validate([
-           'nombre' => 'required|string|max:100',
-           'descripcion' => 'required|string',
-           'metodo_elaboracion' => 'required|string',
-        ]);
-
-    public function store(CocktailRequest $request)
-    {
-   
-       $cocktail = new Cocktail();
-       $cocktail->nombre = ucfirst($request->nombre); // ponemos la primera letra en mayúscula
-       $cocktail->descripcion = $request->descripcion;
-       $cocktail->metodo_elaboracion = $request->metodo_elaboracion;
-       $cocktail->usuario_id = auth()->id();
-       $cocktail->save();
-
-       // 3️⃣ Redirigimos con un mensaje de éxito
-       return redirect()->route('cocktails.index')->with('success', 'Cóctel creado correctamente.');
-    }*/
 
     public function store(CocktailRequest $request)
     {
@@ -82,14 +57,6 @@ class CocktailController extends Controller
                      ->with('success', 'Cóctel creado correctamente.');
     }
 
-        $cocktail->ingredients()->sync($ingredientesData); // sync guarda la relación muchos a muchos
-
-    
-        return redirect()->route('cocktails.index')
-                     ->with('success', 'Cóctel creado correctamente.');
-    }
-
-
     /**
      * Display the specified resource.
      */
@@ -115,21 +82,20 @@ class CocktailController extends Controller
     /**
      * Update the specified resource in storage.
      */
-   
     public function update(CocktailRequest $request, Cocktail $cocktail)
     {
         $cocktail->update([
-              'nombre' => ucfirst($request->nombre),
-              'descripcion' => $request->descripcion,
-              'metodo_elaboracion' => $request->metodo_elaboracion,
+           'nombre' => ucfirst($request->nombre),
+           'descripcion' => $request->descripcion,
+           'metodo_elaboracion' => $request->metodo_elaboracion,
         ]);
 
-        // Actualizar ingredientes en la tabla pivote
+         
         $ingredientesData = [];
         foreach ($request->ingredients as $item) {
             $ingredientesData[$item['id']] = [
-                'cantidad' => $item['cantidad'] ?? null,
-                'unidad' => $item['unidad'] ?? null,
+               'cantidad' => $item['cantidad'] ?? null,
+               'unidad' => $item['unidad'] ?? null,
             ];
         }
 
@@ -151,3 +117,4 @@ class CocktailController extends Controller
                        ->with('success', 'Cóctel eliminado correctamente');
     }
 }
+

@@ -9,7 +9,7 @@
         <div class="max-w-3xl mx-auto sm:px-6 lg:px-8">
             <div class="bg-white overflow-hidden shadow-sm sm:rounded-lg p-6">
 
-                {{-- ✅ Mensajes de validación --}}
+                {{-- Mensajes de validación --}}
                 @if ($errors->any())
                     <div class="mb-4 p-4 bg-red-100 text-red-700 rounded-md">
                         <ul class="list-disc pl-5">
@@ -26,80 +26,67 @@
 
                     {{-- Nombre --}}
                     <div class="mb-4">
-                        <label for="nombre" class="block text-sm font-medium text-gray-700">Nombre</label>
-                        <input type="text" name="nombre" id="nombre"
-                               value="{{ old('nombre', $cocktail->nombre) }}"
+                        <label class="block text-sm font-medium text-gray-700">Nombre</label>
+                        <input type="text" name="nombre" value="{{ old('nombre', $cocktail->nombre) }}"
                                class="mt-1 block w-full border-gray-300 rounded-md shadow-sm">
-                        @error('nombre')
-                            <p class="text-sm text-red-600 mt-1">{{ $message }}</p>
-                        @enderror
                     </div>
 
                     {{-- Descripción --}}
                     <div class="mb-4">
-                        <label for="descripcion" class="block text-sm font-medium text-gray-700">Descripción</label>
-                        <textarea name="descripcion" id="descripcion" rows="4"
+                        <label class="block text-sm font-medium text-gray-700">Descripción</label>
+                        <textarea name="descripcion" rows="4"
                                   class="mt-1 block w-full border-gray-300 rounded-md shadow-sm">{{ old('descripcion', $cocktail->descripcion) }}</textarea>
-                        @error('descripcion')
-                            <p class="text-sm text-red-600 mt-1">{{ $message }}</p>
-                        @enderror
                     </div>
 
                     {{-- Método de elaboración --}}
                     <div class="mb-4">
-                        <label for="metodo_elaboracion" class="block text-sm font-medium text-gray-700">Método de elaboración</label>
-                        <textarea name="metodo_elaboracion" id="metodo_elaboracion" rows="4"
+                        <label class="block text-sm font-medium text-gray-700">Método de elaboración</label>
+                        <textarea name="metodo_elaboracion" rows="4"
                                   class="mt-1 block w-full border-gray-300 rounded-md shadow-sm">{{ old('metodo_elaboracion', $cocktail->metodo_elaboracion) }}</textarea>
-                        @error('metodo_elaboracion')
-                            <p class="text-sm text-red-600 mt-1">{{ $message }}</p>
-                        @enderror
                     </div>
 
                     {{-- Ingredientes --}}
                     <div class="mb-6">
-                        <h3 class="text-lg font-semibold text-gray-800 mb-2">Ingredientes</h3>
+                        <h3 class="text-lg font-semibold text-gray-800 mb-3">Ingredientes</h3>
 
-                        <div class="space-y-3">
-                            @foreach ($allIngredients as $ingredient)
-                                @php
-                                    $pivot = $cocktail->ingredients->firstWhere('id', $ingredient->id)?->pivot;
-                                @endphp
-                                <div class="border p-3 rounded-md">
-                                    <label class="flex items-center space-x-2">
-                                        <input type="checkbox" name="ingredients[{{ $ingredient->id }}][id]"
-                                               value="{{ $ingredient->id }}"
-                                               {{ $pivot ? 'checked' : '' }}>
-                                        <span>{{ $ingredient->nombre }}</span>
-                                    </label>
+                        @php
+                            $unidades = ['ml', 'oz', 'gr', 'cda', 'cdta'];
+                        @endphp
 
-                                    @if ($pivot)
-                                        <div class="ml-6 mt-2 grid grid-cols-2 gap-2">
-                                            <input type="number" step="any"
-                                                   name="ingredients[{{ $ingredient->id }}][cantidad]"
-                                                   value="{{ old("ingredients.{$ingredient->id}.cantidad", $pivot->cantidad) }}"
-                                                   placeholder="Cantidad"
-                                                   class="border-gray-300 rounded-md shadow-sm w-full">
-                                            <input type="text"
-                                                   name="ingredients[{{ $ingredient->id }}][unidad]"
-                                                   value="{{ old("ingredients.{$ingredient->id}.unidad", $pivot->unidad) }}"
-                                                   placeholder="Unidad (ml, oz, etc.)"
-                                                   class="border-gray-300 rounded-md shadow-sm w-full">
-                                        </div>
-                                    @else
-                                        <div class="ml-6 mt-2 grid grid-cols-2 gap-2">
-                                            <input type="number" step="any"
-                                                   name="ingredients[{{ $ingredient->id }}][cantidad]"
-                                                   placeholder="Cantidad"
-                                                   class="border-gray-300 rounded-md shadow-sm w-full">
-                                            <input type="text"
-                                                   name="ingredients[{{ $ingredient->id }}][unidad]"
-                                                   placeholder="Unidad (ml, oz, etc.)"
-                                                   class="border-gray-300 rounded-md shadow-sm w-full">
-                                        </div>
-                                    @endif
-                                </div>
-                            @endforeach
-                        </div>
+                        @foreach ($cocktail->ingredients as $index => $ingredient)
+                            <div class="mb-3 p-3 border rounded-md flex gap-2 items-center">
+                                {{-- Select de ingrediente --}}
+                                <select name="ingredients[{{ $index }}][id]"
+                                        class="border-gray-300 rounded-md w-1/3">
+                                    <option value="">Seleccione un ingrediente</option>
+                                    @foreach ($allIngredients as $item)
+                                        <option value="{{ $item->id }}"
+                                            {{ $ingredient->id == $item->id ? 'selected' : '' }}>
+                                            {{ $item->nombre }}
+                                        </option>
+                                    @endforeach
+                                </select>
+
+                                {{-- Cantidad --}}
+                                <input type="number" step="any"
+                                       name="ingredients[{{ $index }}][cantidad]"
+                                       value="{{ old("ingredients.$index.cantidad", $ingredient->pivot->cantidad) }}"
+                                       placeholder="Cantidad"
+                                       class="border-gray-300 rounded-md w-1/4">
+
+                                {{-- Unidad --}}
+                                <select name="ingredients[{{ $index }}][unidad]"
+                                        class="border-gray-300 rounded-md w-1/4">
+                                    <option value="">Unidad</option>
+                                    @foreach ($unidades as $unidad)
+                                        <option value="{{ $unidad }}"
+                                            {{ $ingredient->pivot->unidad == $unidad ? 'selected' : '' }}>
+                                            {{ $unidad }}
+                                        </option>
+                                    @endforeach
+                                </select>
+                            </div>
+                        @endforeach
                     </div>
 
                     {{-- Botones --}}
