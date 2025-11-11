@@ -30,32 +30,6 @@ class CocktailController extends Controller
         return view('cocktails.create', compact('ingredients'));
     }
 
-    /**
-     * Store a newly created resource in storage.
-     */
-   /*public function store(Request $request)
-   {
-      // 1️⃣ Validamos los datos del formulario
-       $validated = $request->validate([
-           'nombre' => 'required|string|max:100',
-           'descripcion' => 'required|string',
-           'metodo_elaboracion' => 'required|string',
-        ]);
-
-    public function store(CocktailRequest $request)
-    {
-   
-       $cocktail = new Cocktail();
-       $cocktail->nombre = ucfirst($request->nombre); // ponemos la primera letra en mayúscula
-       $cocktail->descripcion = $request->descripcion;
-       $cocktail->metodo_elaboracion = $request->metodo_elaboracion;
-       $cocktail->usuario_id = auth()->id();
-       $cocktail->save();
-
-       // 3️⃣ Redirigimos con un mensaje de éxito
-       return redirect()->route('cocktails.index')->with('success', 'Cóctel creado correctamente.');
-    }*/
-
     public function store(CocktailRequest $request)
     {
    
@@ -81,14 +55,6 @@ class CocktailController extends Controller
         return redirect()->route('cocktails.index')
                      ->with('success', 'Cóctel creado correctamente.');
     }
-
-        $cocktail->ingredients()->sync($ingredientesData); // sync guarda la relación muchos a muchos
-
-    
-        return redirect()->route('cocktails.index')
-                     ->with('success', 'Cóctel creado correctamente.');
-    }
-
 
     /**
      * Display the specified resource.
