@@ -3,6 +3,7 @@
 use App\Http\Controllers\ProfileController;
 use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\CocktailController;
+use App\Http\Controllers\IngredientController;
 
 Route::get('/', function () {
     return view('welcome');
@@ -20,5 +21,7 @@ Route::middleware('auth')->group(function () {
 
 
 Route::resource('cocktails', CocktailController::class);
+
+Route::resource('ingredients', IngredientController::class);
 
 require __DIR__.'/auth.php';

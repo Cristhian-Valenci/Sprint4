@@ -4,6 +4,8 @@ namespace App\Http\Controllers;
 
 use App\Models\Ingredient;
 use Illuminate\Http\Request;
+use App\Http\Requests\IngredientRequest;
+
 
 class IngredientController extends Controller
 {
@@ -12,7 +14,9 @@ class IngredientController extends Controller
      */
     public function index()
     {
-        //
+        $ingredients = \App\Models\Ingredient::all();
+
+        return view('ingredients.index', compact('ingredients'));
     }
 
     /**
@@ -20,15 +24,20 @@ class IngredientController extends Controller
      */
     public function create()
     {
-        //
+        return view('ingredients.index');
     }
 
     /**
      * Store a newly created resource in storage.
      */
-    public function store(Request $request)
+    public function store(IngredientRequest $request)
     {
-        //
+          
+        $ingredient = New Ingredient();
+        $ingredient->nombre = ucfirst($request->nombre); //con ucfirst, hacemos que todos los nombres se guarden con mayuscula al princio, que antes le sacamos para comparar los nombres y para que quede mas prolija la web y base de datos
+        $ingredient->save();
+
+        return redirect()->route('ingredients.index');
     }
 
     /**
@@ -36,7 +45,9 @@ class IngredientController extends Controller
      */
     public function show(Ingredient $ingredient)
     {
-        //
+        $ingredients = [$ingredient];
+
+        return view('ingredient.index', compact('ingredients'));
     }
 
     /**
@@ -44,15 +55,24 @@ class IngredientController extends Controller
      */
     public function edit(Ingredient $ingredient)
     {
-        //
+        return view('ingredients.index', compact('ingredient'));
     }
 
     /**
      * Update the specified resource in storage.
      */
-    public function update(Request $request, Ingredient $ingredient)
+    public function update(IngredientRequest $request, Ingredient $ingredient)
     {
-        //
+        $nombre = ucfirst($request->nombre);
+
+        $ingredient->update([
+            'nombre' => $nombre
+        ]);
+
+        return redirect()->route('ingredients.index')
+                         ->with('success', 'Ingrediente editado correctamente');
+
+
     }
 
     /**
@@ -60,6 +80,10 @@ class IngredientController extends Controller
      */
     public function destroy(Ingredient $ingredient)
     {
-        //
+        $ingredient->delete();
+
+        return redirect()->route('ingredients.index')
+                         ->with('success', 'Ingrediente eliminado correctamente');
+
     }
 }
