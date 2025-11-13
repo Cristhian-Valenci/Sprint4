@@ -14,7 +14,7 @@ class IngredientController extends Controller
      */
     public function index()
     {
-        $ingredients = \App\Models\Ingredient::all();
+         $ingredients = \App\Models\Ingredient::with('cocktails')->get();
 
         return view('ingredients.index', compact('ingredients'));
     }
@@ -55,6 +55,8 @@ class IngredientController extends Controller
      */
     public function edit(Ingredient $ingredient)
     {
+        $this->authorize('update', $ingredient); //para que solo el usuario pueda editar sus ingredientes siempre que no se esten usando en otros cocteles
+
         return view('ingredients.index', compact('ingredient'));
     }
 
@@ -80,6 +82,8 @@ class IngredientController extends Controller
      */
     public function destroy(Ingredient $ingredient)
     {
+        $this->authorize('delete', $ingredient);
+
         $ingredient->delete();
 
         return redirect()->route('ingredients.index')
