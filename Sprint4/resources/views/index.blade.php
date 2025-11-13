@@ -9,47 +9,51 @@
                 </div>
             @endif
 
-            <table class="min-w-full border border-gray-300">
-                <thead class="bg-gray-100">
-                    <tr>
-                        <th class="px-4 py-2 border">ID</th>
-                        <th class="px-4 py-2 border">Nombre</th>
-                        <th class="px-4 py-2 border">Descripción</th>
-                        <th class="px-4 py-2 border">Método</th>
-                        <th class="px-4 py-2 border">Acciones</th>
-                    </tr>
-                </thead>
-                <tbody>
-                    @foreach ($cocktails as $cocktail)
-                        <tr class="hover:bg-gray-50">
-                            <td class="px-4 py-2 border">{{ $cocktail->id }}</td>
-                            <td class="px-4 py-2 border">{{ $cocktail->nombre }}</td>
-                            <td class="px-4 py-2 border">{{ $cocktail->descripcion }}</td>
-                            <td class="px-4 py-2 border">{{ $cocktail->metodo_elaboracion }}</td>
-                            <td class="px-4 py-2 border flex gap-2">
-                                <!-- Botón de Editar -->
+            <!-- Grid de tarjetas -->
+            <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6">
+                @foreach ($cocktails as $cocktail)
+                    <div class="bg-white shadow rounded-lg p-4 flex flex-col">
+                        <h2 class="text-xl font-semibold mb-2">{{ $cocktail->nombre }}</h2>
+                        <p class="text-gray-700 mb-2">{{ $cocktail->descripcion }}</p>
+                        <p class="text-gray-600 mb-2"><strong>Método:</strong> {{ $cocktail->metodo_elaboracion }}</p>
+
+                        <!-- Ingredientes -->
+                        <div class="mb-4">
+                            <h3 class="font-medium">Ingredientes:</h3>
+                            <ul class="list-disc list-inside">
+                                @foreach ($cocktail->ingredients as $ingredient)
+                                    <li>{{ $ingredient->nombre }} 
+                                        @if($ingredient->pivot->cantidad)
+                                            - {{ $ingredient->pivot->cantidad }} {{ $ingredient->pivot->unidad }}
+                                        @endif
+                                    </li>
+                                @endforeach
+                            </ul>
+                        </div>
+
+                        <!-- Botones solo si es dueño -->
+                        @can('update', $cocktail)
+                            <div class="flex gap-2 mt-auto">
                                 <a href="{{ route('cocktails.edit', $cocktail->id) }}" 
-                                   class="px-2 py-1 bg-blue-600 text-white rounded hover:bg-blue-700">
+                                   class="px-3 py-1 bg-blue-600 text-white rounded hover:bg-blue-700">
                                     🖉 Editar
                                 </a>
 
-                                <!-- Botón de Eliminar -->
                                 <form action="{{ route('cocktails.destroy', $cocktail->id) }}" method="POST">
                                     @csrf
                                     @method('DELETE')
                                     <button type="submit" 
-                                        class="px-2 py-1 bg-red-600 text-white rounded hover:bg-red-700"
+                                        class="px-3 py-1 bg-red-600 text-white rounded hover:bg-red-700"
                                         onclick="return confirm('¿Estás seguro de eliminar este cóctel?')">
                                         🗑 Eliminar
                                     </button>
                                 </form>
-                            </td>
-                        </tr>
-                    @endforeach
-                </tbody>
-            </table>
+                            </div>
+                        @endcan
+                    </div>
+                @endforeach
+            </div>
         </div>
     </div>
 </x-app-layout>
 
->>>>>>> Stashed changes

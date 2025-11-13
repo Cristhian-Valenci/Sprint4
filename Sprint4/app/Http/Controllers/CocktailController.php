@@ -72,6 +72,8 @@ class CocktailController extends Controller
      */
     public function edit(Cocktail $cocktail)
     {
+        $this->authorize('update', $cocktail);
+        
         $cocktail->load('ingredients');
         $allIngredients = Ingredient::all();
 
@@ -111,6 +113,8 @@ class CocktailController extends Controller
      */
     public function destroy(Cocktail $cocktail)
     {
+       $this->authorize('update', $cocktail);
+
        $cocktail->delete(); 
 
       return redirect()->route('cocktails.index') 
