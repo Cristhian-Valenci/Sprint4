@@ -14,7 +14,7 @@
                       <ul>
                           @foreach ($errors->all() as $error)
                                <li>{{ $error }}</li>
-                            @endforeach
+                          @endforeach
                          </ul>
                  </div>
             @endif
@@ -22,7 +22,6 @@
             <table class="min-w-full border border-gray-300">
                 <thead class="bg-gray-100">
                     <tr>
-                      
                         <th class="px-4 py-2 border">Nombre</th>                        
                         <th class="px-4 py-2 border">Acciones</th>
                     </tr>
@@ -30,27 +29,34 @@
                 <tbody>
                     @foreach ($ingredients as $ingredient)
                         <tr class="hover:bg-gray-50">
-                       
                             <td class="px-4 py-2 border">
-                                <form action="{{ route('ingredients.update', $ingredient->id) }}" method="POST" class="flex gap-2">
-                                    @csrf
-                                    @method('PUT')
-                                    <input type="text" name="nombre" value="{{ $ingredient->nombre }}" required
-                                        class="border px-2 py-1 rounded" />
-                                    <button type="submit"
-                                        class="bg-blue-600 text-white px-3 py-1 rounded hover:bg-blue-700">💾</button>
-                                </form>
+                                @can('update', $ingredient)
+                                    <form action="{{ route('ingredients.update', $ingredient->id) }}" method="POST" class="flex gap-2">
+                                        @csrf
+                                        @method('PUT')
+                                        <input type="text" name="nombre" value="{{ $ingredient->nombre }}" required
+                                            class="border px-2 py-1 rounded" />
+                                        <button type="submit"
+                                            class="bg-blue-600 text-white px-3 py-1 rounded hover:bg-blue-700">💾</button>
+                                    </form>
+                                @else
+                                    {{ $ingredient->nombre }}
+                                @endcan
                             </td>
                             <td class="px-4 py-2 border">
-                                <form action="{{ route('ingredients.destroy', $ingredient->id) }}" method="POST">
-                                    @csrf
-                                    @method('DELETE')
-                                    <button type="submit"
-                                        class="bg-red-600 text-white px-3 py-1 rounded hover:bg-red-700"
-                                        onclick="return confirm('¿Estás seguro de eliminar este ingrediente?')">
-                                        🗑
-                                    </button>
-                                </form>
+                                @can('delete', $ingredient)
+                                    <form action="{{ route('ingredients.destroy', $ingredient->id) }}" method="POST">
+                                        @csrf
+                                        @method('DELETE')
+                                        <button type="submit"
+                                            class="bg-red-600 text-white px-3 py-1 rounded hover:bg-red-700"
+                                            onclick="return confirm('¿Estás seguro de eliminar este ingrediente?')">
+                                            🗑
+                                        </button>
+                                    </form>
+                                @else
+                                    <span class="text-gray-400">—</span>
+                                @endcan
                             </td>
                         </tr>
                     @endforeach

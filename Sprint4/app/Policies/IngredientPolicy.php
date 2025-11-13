@@ -1,0 +1,73 @@
+<?php
+
+namespace App\Policies;
+
+use App\Models\Ingredient;
+use App\Models\User;
+use Illuminate\Auth\Access\Response;
+
+class IngredientPolicy
+{
+    /**
+     * Determine whether the user can view any models.
+     */
+    public function viewAny(User $user): bool
+    {
+        return false;
+    }
+
+    /**
+     * Determine whether the user can view the model.
+     */
+    public function view(User $user, Ingredient $ingredient): bool
+    {
+        return false;
+    }
+
+    /**
+     * Determine whether the user can create models.
+     */
+    public function create(User $user): bool
+    {
+        return false;
+    }
+
+    /**
+     * Determine whether the user can update the model.
+     */
+    public function update(User $user, Ingredient $ingredient): bool
+    {
+             $usedByOther = $ingredient->cocktails
+                               ->where('usuario_id', '!=', $user->id)
+                               ->count() > 0;
+        return !$usedByOther;
+    }
+
+    /**
+     * Determine whether the user can delete the model.
+     */
+    public function delete(User $user, Ingredient $ingredient): bool
+    {
+            $usedByOther = $ingredient->cocktails
+                               ->where('usuario_id', '!=', $user->id) //solo si el ususario que creo ese ingrediente es distinto a cualquier otro ususario
+                               ->count() > 0; //y hay mas de uno
+
+        return !$usedByOther;
+    }
+
+    /**
+     * Determine whether the user can restore the model.
+     */
+    public function restore(User $user, Ingredient $ingredient): bool
+    {
+        return false;
+    }
+
+    /**
+     * Determine whether the user can permanently delete the model.
+     */
+    public function forceDelete(User $user, Ingredient $ingredient): bool
+    {
+        return false;
+    }
+}
