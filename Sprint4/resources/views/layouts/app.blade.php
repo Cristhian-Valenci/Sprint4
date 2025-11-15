@@ -32,5 +32,8 @@
                 {{ $slot }}
             </main>
         </div>
+            <footer class="text-center mt-10 text-gray-600 text-sm py-4">
+               © {{ date('Y') }} Cocteleando — Todos los derechos reservados.
+            </footer>
     </body>
 </html>
