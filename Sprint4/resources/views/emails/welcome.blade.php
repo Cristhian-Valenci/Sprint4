@@ -6,7 +6,7 @@
 </head>
 <body style="font-family: Arial, sans-serif; background-color: #fafafa; padding: 20px;">
     <div style="max-width: 600px; margin: 0 auto; background: #fff; border-radius: 8px; padding: 20px;">
-        <h2 style="color: #d35400;">¡Hola {{ $user->name }}!</h2>
+        <h2 style="color:hsl(129, 100.00%, 41.40%);">¡Hola {{ $user->name }}!</h2>
 
         <p><strong>Bienvenido a <span style="color:#27ae60;">Cocteleando</span>!</strong></p>
 
