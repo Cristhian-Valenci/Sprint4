@@ -5,49 +5,40 @@ namespace App\Http\Controllers;
 use App\Models\Ingredient;
 use Illuminate\Http\Request;
 use App\Http\Requests\IngredientRequest;
+use Illuminate\Foundation\Auth\Access\AuthorizesRequests;
 
 
 class IngredientController extends Controller
 {
+    use AuthorizesRequests; 
     /**
      * Display a listing of the resource.
      */
     public function index(Request $request)
-{
-    $orden = $request->get('orden', 'usuario_primero'); 
-    $userId = auth()->id();
+    {
+       $orden = $request->get('orden', 'usuario_primero'); // valor por defecto
+       $userId = auth()->id();
 
-    // Base query con columna "es_del_usuario"
-    $ingredients = Ingredient::select('ingredients.*')
-        ->selectRaw("
-            EXISTS (
-                SELECT 1 
-                FROM cocktail_ingredient ci
-                JOIN cocktails c ON c.id = ci.cocktail_id
-                WHERE ci.ingredient_id = ingredients.id
-                AND c.usuario_id = ?
-            ) AS es_del_usuario
-        ", [$userId]);
+       
+       $ingredientsQuery = \App\Models\Ingredient::query();
 
-    // Tipos de orden
-    if ($orden === 'alfabetico') {
-        $ingredients = $ingredients->orderBy('nombre', 'asc');
-    }
-    elseif ($orden === 'usuario_ultimo') {
-        // primero los que NO son del usuario
-        $ingredients = $ingredients->orderBy('es_del_usuario', 'asc')
-                                   ->orderBy('nombre', 'asc');
-    }
-    else { // usuario_primero
-        // primero los que son del usuario
-        $ingredients = $ingredients->orderBy('es_del_usuario', 'desc')
-                                   ->orderBy('nombre', 'asc');
+       // Orden según la opción seleccionada
+       if ($orden === 'alfabetico') {
+          $ingredientsQuery->orderBy('nombre', 'asc');
+        } elseif ($orden === 'usuario_ultimo') {
+           $ingredientsQuery->orderByRaw("CASE WHEN user_id = ? THEN 1 ELSE 0 END ASC", [$userId])
+                         ->orderBy('nombre');
+        } else { 
+          $ingredientsQuery->orderByRaw("CASE WHEN user_id = ? THEN 1 ELSE 0 END DESC", [$userId])
+                         ->orderBy('nombre');
+        }
+
+    
+        $ingredients = $ingredientsQuery->paginate(10)->withQueryString();
+
+        return view('ingredients.index', compact('ingredients', 'orden'));
     }
 
-    $ingredients = $ingredients->get();
-
-    return view('ingredients.index', compact('ingredients', 'orden'));
-}
 
     /**
      * Show the form for creating a new resource.
@@ -65,6 +56,7 @@ class IngredientController extends Controller
           
         $ingredient = New Ingredient();
         $ingredient->nombre = ucfirst($request->nombre); //con ucfirst, hacemos que todos los nombres se guarden con mayuscula al princio, que antes le sacamos para comparar los nombres y para que quede mas prolija la web y base de datos
+        $ingredient->user_id = auth()->id();
         $ingredient->save();
 
         return redirect()->route('ingredients.index');
@@ -101,7 +93,7 @@ class IngredientController extends Controller
             'nombre' => $nombre
         ]);
 
-        return redirect()->route('ingredients.index')
+        return redirect()->route('ingredients.index', ['orden' => $request->orden])
                          ->with('success', 'Ingrediente editado correctamente');
 
 

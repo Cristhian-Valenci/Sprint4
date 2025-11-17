@@ -22,10 +22,9 @@
 
         </form>
     </x-subheader>
+
     <div class="py-6">
         <div class="max-w-xl mx-auto bg-white p-6 rounded-lg shadow sm:px-6 lg:px-8">
-
-            
 
             @if(session('success'))
                 <div class="mb-4 p-2 bg-green-200 text-green-800 rounded">
@@ -56,9 +55,16 @@
                             <td class="px-4 py-2 border">
 
                                 @can('update', $ingredient)
-                                    <form action="{{ route('ingredients.update', $ingredient->id) }}" method="POST">
+                                    <!-- FORM REAL QUE EDITA -->
+                                    <form id="edit-form-{{ $ingredient->id }}"
+                                          action="{{ route('ingredients.update', $ingredient->id) }}"
+                                          method="POST">
                                         @csrf
                                         @method('PUT')
+
+                                        <!-- Mantener orden -->
+                                        <input type="hidden" name="orden" value="{{ $orden }}">
+
                                         <input type="text" name="nombre"
                                             value="{{ $ingredient->nombre }}"
                                             required
@@ -74,24 +80,25 @@
                                 <div class="flex justify-center gap-2">
 
                                     @can('update', $ingredient)
-                                        <form action="{{ route('ingredients.update', $ingredient->id) }}" method="POST">
-                                            @csrf
-                                            @method('PUT')
-                                            <input type="hidden" name="nombre" value="{{ $ingredient->nombre }}">
-                                            <button type="submit"
-                                                class=" text-white px-3 py-1 rounded hover:bg-green-700">
-                                                
-                                                <img src="{{ asset('images/edit-buttom.png') }}" 
-                                               alt="Editar"
-                                               class="w-5 h-5">   
-                                            </button>
-                                        </form>
+                                        <!-- Botón que envía el form del input -->
+                                        <button type="submit"
+                                            form="edit-form-{{ $ingredient->id }}"
+                                            class="text-white px-3 py-1 rounded hover:bg-green-700">
+
+                                            <img src="{{ asset('images/edit-buttom.png') }}" 
+                                                 alt="Editar"
+                                                 class="w-5 h-5">
+                                        </button>
                                     @endcan
 
                                     @can('delete', $ingredient)
                                         <form action="{{ route('ingredients.destroy', $ingredient->id) }}" method="POST">
                                             @csrf
                                             @method('DELETE')
+
+                                            <!-- Mantener orden -->
+                                            <input type="hidden" name="orden" value="{{ $orden }}">
+
                                             <button type="submit"
                                                class="text-white px-3 py-1 rounded hover:bg-red-700 flex items-center justify-center"
                                                onclick="return confirm('¿Eliminar este ingrediente?')">
@@ -110,6 +117,10 @@
                     @endforeach
                 </tbody>
             </table>
+            <div class="mt-4">
+             {{ $ingredients->links() }}
+            </div>
+
 
             <!-- Formulario para agregar nuevo ingrediente -->
             <form action="{{ route('ingredients.store') }}" method="POST" class="flex gap-2 mt-4">
@@ -123,6 +134,5 @@
             </form>
 
         </div>
-       
     </div>
 </x-app-layout>
