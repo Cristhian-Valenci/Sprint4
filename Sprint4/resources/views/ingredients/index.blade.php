@@ -1,7 +1,31 @@
 <x-app-layout>
+    <x-subheader title="Ingredientes">
+        <form method="GET">
+            <select name="orden" class="border rounded px-2 py-1"
+              onchange="this.form.submit()">
+
+               <option value="alfabetico"
+                  {{ $orden == 'alfabetico' ? 'selected' : '' }}>
+                   Alfabético (A - Z)
+                </option>
+
+                <option value="usuario_primero"
+                   {{ $orden == 'usuario_primero' ? 'selected' : '' }}>
+                   Mis ingredientes primero
+                </option>
+
+                <option value="usuario_ultimo"
+                    {{ $orden == 'usuario_ultimo' ? 'selected' : '' }}>
+                    Mis ingredientes al final
+                </option>
+            </select>
+
+        </form>
+    </x-subheader>
     <div class="py-6">
-        <div class="max-w-7xl mx-auto sm:px-6 lg:px-8">
-            <h1 class="text-2xl font-bold mb-4">Listado de Ingredientes</h1>
+        <div class="max-w-xl mx-auto bg-white p-6 rounded-lg shadow sm:px-6 lg:px-8">
+
+            
 
             @if(session('success'))
                 <div class="mb-4 p-2 bg-green-200 text-green-800 rounded">
@@ -10,67 +34,95 @@
             @endif
 
             @if ($errors->any())
-                 <div class="mb-4 p-2 bg-red-200 text-red-800 rounded">
-                      <ul>
-                          @foreach ($errors->all() as $error)
-                               <li>{{ $error }}</li>
-                          @endforeach
-                         </ul>
-                 </div>
+                <div class="mb-4 p-2 bg-red-200 text-red-800 rounded">
+                    <ul>
+                        @foreach ($errors->all() as $error)
+                             <li>{{ $error }}</li>
+                        @endforeach
+                    </ul>
+                </div>
             @endif
 
-            <table class="min-w-full border border-gray-300">
+            <table class="w-full border border-gray-300 rounded-lg overflow-hidden">
                 <thead class="bg-gray-100">
                     <tr>
-                        <th class="px-4 py-2 border">Nombre</th>                        
-                        <th class="px-4 py-2 border">Acciones</th>
+                        <th class="px-4 py-2 border">Nombre</th>
+                        <th class="px-4 py-2 border w-32 text-center">Editar/Eliminar</th>
                     </tr>
                 </thead>
                 <tbody>
                     @foreach ($ingredients as $ingredient)
                         <tr class="hover:bg-gray-50">
                             <td class="px-4 py-2 border">
+
                                 @can('update', $ingredient)
-                                    <form action="{{ route('ingredients.update', $ingredient->id) }}" method="POST" class="flex gap-2">
+                                    <form action="{{ route('ingredients.update', $ingredient->id) }}" method="POST">
                                         @csrf
                                         @method('PUT')
-                                        <input type="text" name="nombre" value="{{ $ingredient->nombre }}" required
-                                            class="border px-2 py-1 rounded" />
-                                        <button type="submit"
-                                            class="bg-blue-600 text-white px-3 py-1 rounded hover:bg-blue-700">💾</button>
+                                        <input type="text" name="nombre"
+                                            value="{{ $ingredient->nombre }}"
+                                            required
+                                            class="border px-2 py-1 rounded w-full" />
                                     </form>
                                 @else
                                     {{ $ingredient->nombre }}
                                 @endcan
+
                             </td>
-                            <td class="px-4 py-2 border">
-                                @can('delete', $ingredient)
-                                    <form action="{{ route('ingredients.destroy', $ingredient->id) }}" method="POST">
-                                        @csrf
-                                        @method('DELETE')
-                                        <button type="submit"
-                                            class="bg-red-600 text-white px-3 py-1 rounded hover:bg-red-700"
-                                            onclick="return confirm('¿Estás seguro de eliminar este ingrediente?')">
-                                            🗑
-                                        </button>
-                                    </form>
-                                @else
-                                    <span class="text-gray-400">—</span>
-                                @endcan
+
+                            <td class="px-4 py-2 border text-center">
+                                <div class="flex justify-center gap-2">
+
+                                    @can('update', $ingredient)
+                                        <form action="{{ route('ingredients.update', $ingredient->id) }}" method="POST">
+                                            @csrf
+                                            @method('PUT')
+                                            <input type="hidden" name="nombre" value="{{ $ingredient->nombre }}">
+                                            <button type="submit"
+                                                class=" text-white px-3 py-1 rounded hover:bg-green-700">
+                                                
+                                                <img src="{{ asset('images/edit-buttom.png') }}" 
+                                               alt="Editar"
+                                               class="w-5 h-5">   
+                                            </button>
+                                        </form>
+                                    @endcan
+
+                                    @can('delete', $ingredient)
+                                        <form action="{{ route('ingredients.destroy', $ingredient->id) }}" method="POST">
+                                            @csrf
+                                            @method('DELETE')
+                                            <button type="submit"
+                                               class="text-white px-3 py-1 rounded hover:bg-red-700 flex items-center justify-center"
+                                               onclick="return confirm('¿Eliminar este ingrediente?')">
+
+                                               <img src="{{ asset('images/delete-buttom.png') }}" 
+                                               alt="Eliminar"
+                                               class="w-5 h-5">   
+                                            </button>
+
+                                        </form>
+                                    @endcan
+
+                                </div>
                             </td>
                         </tr>
                     @endforeach
                 </tbody>
             </table>
 
-            <!-- Formulario para agregar un nuevo ingrediente -->
+            <!-- Formulario para agregar nuevo ingrediente -->
             <form action="{{ route('ingredients.store') }}" method="POST" class="flex gap-2 mt-4">
                 @csrf
-                <input type="text" name="nombre" placeholder="Nuevo Ingrediente" required
+                <input type="text" name="nombre" placeholder="Nuevo ingrediente" required
                     class="flex-grow border px-3 py-2 rounded bg-gray-50" />
                 <button type="submit"
-                    class="bg-gray-800 text-white px-4 py-2 rounded hover:bg-gray-700">Agregar</button>
+                    class="bg-green-700 text-white px-4 py-2 rounded hover:bg-green-800">
+                    Agregar
+                </button>
             </form>
+
         </div>
+       
     </div>
 </x-app-layout>

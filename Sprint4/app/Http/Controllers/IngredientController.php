@@ -12,12 +12,42 @@ class IngredientController extends Controller
     /**
      * Display a listing of the resource.
      */
-    public function index()
-    {
-         $ingredients = \App\Models\Ingredient::with('cocktails')->get();
+    public function index(Request $request)
+{
+    $orden = $request->get('orden', 'usuario_primero'); 
+    $userId = auth()->id();
 
-        return view('ingredients.index', compact('ingredients'));
+    // Base query con columna "es_del_usuario"
+    $ingredients = Ingredient::select('ingredients.*')
+        ->selectRaw("
+            EXISTS (
+                SELECT 1 
+                FROM cocktail_ingredient ci
+                JOIN cocktails c ON c.id = ci.cocktail_id
+                WHERE ci.ingredient_id = ingredients.id
+                AND c.usuario_id = ?
+            ) AS es_del_usuario
+        ", [$userId]);
+
+    // Tipos de orden
+    if ($orden === 'alfabetico') {
+        $ingredients = $ingredients->orderBy('nombre', 'asc');
     }
+    elseif ($orden === 'usuario_ultimo') {
+        // primero los que NO son del usuario
+        $ingredients = $ingredients->orderBy('es_del_usuario', 'asc')
+                                   ->orderBy('nombre', 'asc');
+    }
+    else { // usuario_primero
+        // primero los que son del usuario
+        $ingredients = $ingredients->orderBy('es_del_usuario', 'desc')
+                                   ->orderBy('nombre', 'asc');
+    }
+
+    $ingredients = $ingredients->get();
+
+    return view('ingredients.index', compact('ingredients', 'orden'));
+}
 
     /**
      * Show the form for creating a new resource.
