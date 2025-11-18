@@ -22,18 +22,22 @@ class IngredientController extends Controller
        
        $ingredientsQuery = \App\Models\Ingredient::query();
 
-       // Orden según la opción seleccionada
-       if ($orden === 'alfabetico') {
-          $ingredientsQuery->orderBy('nombre', 'asc');
-        } elseif ($orden === 'usuario_ultimo') {
-           $ingredientsQuery->orderByRaw("CASE WHEN user_id = ? THEN 1 ELSE 0 END ASC", [$userId])
-                         ->orderBy('nombre');
-        } else { 
-          $ingredientsQuery->orderByRaw("CASE WHEN user_id = ? THEN 1 ELSE 0 END DESC", [$userId])
-                         ->orderBy('nombre');
-        }
+        switch ($orden) {
+            case 'usuario_primero':
+                $ingredientsQuery = $ingredientsQuery
+                ->orderByRaw("CASE WHEN user_id = ? THEN 1 ELSE 0 END DESC", [$userId])
+                ->orderBy('nombre');
+            break;
+            case 'usuario_ultimo':
+                $ingredientsQuery = $ingredientsQuery
+                ->orderByRaw("CASE WHEN user_id = ? THEN 1 ELSE 0 END ASC", [$userId])
+                ->orderBy('nombre');
+            break;
+            default:
+               $ingredientsQuery = $ingredientsQuery->orderBy('nombre');
+            break;
 
-    
+        }
         $ingredients = $ingredientsQuery->paginate(10)->withQueryString();
 
         return view('ingredients.index', compact('ingredients', 'orden'));

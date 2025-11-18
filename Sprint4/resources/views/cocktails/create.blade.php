@@ -1,5 +1,7 @@
 <x-app-layout>
     <x-subheader title="Crear cóctel">
+            <x-button.ingredients />
+
     </x-subheader>
 
     @if ($errors->any())

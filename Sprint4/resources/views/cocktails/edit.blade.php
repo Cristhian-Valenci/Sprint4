@@ -1,5 +1,6 @@
 <x-app-layout>
    <x-subheader title="Editar cóctel">
+         <x-button.ingredients />
     </x-subheader>
 
     <div class="py-6">
