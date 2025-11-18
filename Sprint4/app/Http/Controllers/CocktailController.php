@@ -39,7 +39,7 @@ class CocktailController extends Controller
             break;
         }
 
-        $cocktails = $cocktails->get(); // o ->paginate(12) si quieres paginar
+        $cocktails = $cocktails->paginate(16)->withQueryString();
 
         return view('index', compact('cocktails', 'orden'));
     }

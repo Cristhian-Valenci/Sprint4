@@ -20,15 +20,16 @@
                 {{-- DESCRIPCIÓN --}}
                 <div class="mb-4">
                     <h2 class="text-lg font-semibold text-gray-800">Descripción</h2>
-                    <p class="mt-1 text-gray-700 border p-2 rounded bg-gray-50 whitespace-pre-line">
-                        {{ $cocktail->descripcion }}
+                    <p class="mt-1 text-gray-700 border p-2 rounded bg-gray-50 whitespace-pre-line break-words">
+                       {{ $cocktail->descripcion }}
                     </p>
+
                 </div>
 
                 {{-- MÉTODO --}}
                 <div class="mb-4">
                     <h2 class="text-lg font-semibold text-gray-800">Método de elaboración</h2>
-                    <p class="mt-1 text-gray-700 border p-2 rounded bg-gray-50 whitespace-pre-line">
+                    <p class="mt-1 text-gray-700 border p-2 rounded bg-gray-50 whitespace-pre-line break-words">
                         {{ $cocktail->metodo_elaboracion }}
                     </p>
                 </div>

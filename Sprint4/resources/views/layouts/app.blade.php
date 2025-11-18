@@ -15,7 +15,7 @@
         @vite(['resources/css/app.css', 'resources/js/app.js'])
     </head>
     <body class="font-sans antialiased">
-        <div class="min-h-screen bg-gray-100">
+        <div class="min-h-screen flex flex-col bg-emerald-50">
             @include('layouts.navigation')
 
             <!-- Page Heading -->
@@ -28,12 +28,13 @@
             @endisset
 
             <!-- Page Content -->
-            <main>
+            <main class="flex-grow">
                 {{ $slot }}
             </main>
-        </div>
-            <footer class="text-center mt-10 text-gray-600 text-sm py-4">
+        
+            <footer class="text-center mt-10 text-gray-600 text-sm py-4 bg-gray-200">
                © {{ date('Y') }} Cocteleando — Todos los derechos reservados.
             </footer>
+        </div>
     </body>
 </html>
