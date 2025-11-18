@@ -41,7 +41,17 @@ class CocktailRequest extends FormRequest
             ],
             'descripcion' => 'required|string',
             'metodo_elaboracion' => 'required|string',
-            'ingredients' => 'required|array|min:1', // validar que venga un array y al menos un ingrediente
+            'ingredients' => [
+                          'required',
+                           'array',
+                           'min:1',
+                         function ($attribute, $value, $fail) {
+                              $ids = array_column($value, 'id'); // obtengo todos los IDs de ingredientes
+                              if (count($ids) !== count(array_unique($ids))) {
+                                  $fail('No puedes repetir el mismo ingrediente.');
+                                }
+                            }
+                        ],
             'ingredients.*.id'=> 'required|integer|exists:ingredients,id', // cada valor del array debe ser un ID válido de la tabla ingredients
             'ingredients.*.cantidad' => 'required|numeric|min:0',  // cantidad opcional, numérica y >=0
             'ingredients.*.unidad' => 'required|in:cl,ml,oz,dash,unidades,cucharadas',

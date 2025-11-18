@@ -1,5 +1,6 @@
 document.addEventListener('DOMContentLoaded', () => {
-    let ingredienteIndex = 1;
+    let ingredienteIndex = document.querySelectorAll('.ingrediente-row').length;
+
 
     document.getElementById('add-ingrediente').addEventListener('click', function() {
         const container = document.getElementById('ingredientes-container');
