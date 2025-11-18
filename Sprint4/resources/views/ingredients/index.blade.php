@@ -1,27 +1,16 @@
 <x-app-layout>
-    <x-subheader title="Ingredientes">
-        <form method="GET">
-            <select name="orden" class="border rounded px-2 py-1"
-              onchange="this.form.submit()">
-
-               <option value="alfabetico"
-                  {{ $orden == 'alfabetico' ? 'selected' : '' }}>
-                   Alfabético (A - Z)
-                </option>
-
-                <option value="usuario_primero"
-                   {{ $orden == 'usuario_primero' ? 'selected' : '' }}>
-                   Mis ingredientes primero
-                </option>
-
-                <option value="usuario_ultimo"
-                    {{ $orden == 'usuario_ultimo' ? 'selected' : '' }}>
-                    Mis ingredientes al final
-                </option>
-            </select>
-
-        </form>
+   <x-subheader title="Ingredientes">
+        <x-slot:center>
+           <x-sort-select :orden="$orden" :options="[
+            'alfabetico' => 'Alfabético (A - Z)',
+            'usuario_primero' => 'Mis ingredientes primero',
+            'usuario_ultimo' => 'Mis ingredientes al final'
+            ]" />
+        </x-slot:center>
+        
+        <x-button.back />
     </x-subheader>
+
 
     <div class="py-6">
         <div class="max-w-xl mx-auto bg-white p-6 rounded-lg shadow sm:px-6 lg:px-8">
@@ -43,7 +32,7 @@
             @endif
 
             <table class="w-full border border-gray-300 rounded-lg overflow-hidden">
-                <thead class="bg-gray-100">
+                <thead class="bg-gray-200">
                     <tr>
                         <th class="px-4 py-2 border">Nombre</th>
                         <th class="px-4 py-2 border w-32 text-center">Editar/Eliminar</th>

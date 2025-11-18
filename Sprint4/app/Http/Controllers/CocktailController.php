@@ -14,13 +14,36 @@ class CocktailController extends Controller
     /**
      * Display a listing of the resource.
      */
-    public function index()
+    public function index(Request $request)
     {
-       $cocktails = Cocktail::with('ingredients')->get();
+        $orden = $request->get('orden', 'alfabetico'); // valor por defecto
+        $userId = auth()->id();
 
-       return view('index', compact('cocktails')); // con compact envio la variable a la vista
+        $cocktails = Cocktail::with('ingredients');
 
+        switch ($orden) {
+           case 'usuario_primero':
+              $cocktails = $cocktails
+                ->orderByRaw("CASE WHEN usuario_id = ? THEN 0 ELSE 1 END", [$userId])
+                ->orderBy('nombre');
+            break;
+
+           case 'usuario_ultimo':
+              $cocktails = $cocktails
+                ->orderByRaw("CASE WHEN usuario_id = ? THEN 1 ELSE 0 END", [$userId])
+                ->orderBy('nombre');
+            break;
+
+            default: // 'alfabetico'
+              $cocktails = $cocktails->orderBy('nombre');
+            break;
+        }
+
+        $cocktails = $cocktails->get(); // o ->paginate(12) si quieres paginar
+
+        return view('index', compact('cocktails', 'orden'));
     }
+
 
     /**
      * Show the form for creating a new resource.

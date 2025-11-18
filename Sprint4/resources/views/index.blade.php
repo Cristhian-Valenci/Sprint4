@@ -1,7 +1,19 @@
 <x-app-layout>
+    <x-subheader title="Lista de cócteles">
+        <x-slot:center>
+            <x-sort-select :orden="$orden" :options="[
+            'alfabetico' => 'Alfabético (A - Z)',
+            'usuario_primero' => 'Mis cócteles primero',
+            'usuario_ultimo' => 'Mis cócteles al final'
+            ]" />
+        </x-slot:center>
+           
+            <x-button.cocktail-create />
+            <x-button.ingredients />
+    </x-subheader>
     <div class="py-6">
         <div class="max-w-7xl mx-auto sm:px-6 lg:px-8">
-            <h1 class="text-2xl font-bold mb-4">Listado de Cócteles</h1>
+            
 
             @if(session('success'))
                 <div class="mb-4 p-2 bg-green-200 text-green-800 rounded">
