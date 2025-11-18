@@ -6,9 +6,11 @@ use App\Models\Cocktail;
 use App\Models\Ingredient;
 use Illuminate\Http\Request;
 use App\Http\Requests\CocktailRequest;
+use Illuminate\Foundation\Auth\Access\AuthorizesRequests;
 
 class CocktailController extends Controller
 {
+    use AuthorizesRequests;
     /**
      * Display a listing of the resource.
      */
