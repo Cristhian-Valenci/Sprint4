@@ -24,7 +24,12 @@
             <!-- Grid de tarjetas -->
             <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6">
                 @foreach ($cocktails as $cocktail)
-                    <div class="bg-white shadow rounded-lg p-4 flex flex-col">
+                    <div class="bg-white shadow rounded-lg p-4 flex flex-col relative">
+                        <a href="{{ route('cocktails.show', $cocktail->id) }}"
+                            class="absolute top-2 right-2 bg-gray-700 text-white px-3 py-1 rounded hover:bg-gray-800">
+                              Ver más
+                         </a>
+
                         <h2 class="text-xl font-semibold mb-2">{{ $cocktail->nombre }}</h2>
                         <p class="text-gray-700 mb-2">{{ $cocktail->descripcion }}</p>
                         <p class="text-gray-600 mb-2"><strong>Método:</strong> {{ $cocktail->metodo_elaboracion }}</p>

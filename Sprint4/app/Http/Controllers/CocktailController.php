@@ -85,12 +85,11 @@ class CocktailController extends Controller
      * Display the specified resource.
      */
     public function show(Cocktail $cocktail)
-    {
-        $cocktail->load('ingredients');
-        $cocktails = [$cocktail];
+{
+    $cocktail->load('ingredients');
 
-        return view('index', compact('cocktails'));
-    }
+    return view('cocktails.show', compact('cocktail'));
+}
 
     /**
      * Show the form for editing the specified resource.
