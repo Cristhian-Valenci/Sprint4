@@ -8,16 +8,16 @@
   **Funcionalidades:**
   
   Autenticacion con Laravel Breeze
-    - Registro
-    - Login
-    - Restablecimiento de contraseña vía mail personalizado
+  - Registro
+  - Login
+  - Restablecimiento de contraseña vía mail personalizado
   Gestíon de Cócteles:
-    - Vistas personalizadas mediante componentes Blade
-    - CRUD completo (siempre y cuando sean cócteles creados por tí)
-    - Podrás ordenarlos alfabéticamente, los tuyos primero o los tuyos despues
+  - Vistas personalizadas mediante componentes Blade
+  - CRUD completo (siempre y cuando sean cócteles creados por tí)
+  - Podrás ordenarlos alfabéticamente, los tuyos primero o los tuyos despues
   Gestión de ingredientes:
-    - En una unica vista personalizada podrás realizar el:
-    - CRUD completo (siempre y cuando sean creados por tí y no estén usandose en cocteles(ni tuyos ni de un colega)
+  - En una unica vista personalizada podrás realizar el:
+  - CRUD completo (siempre y cuando sean creados por tí y no estén usandose en cocteles(ni tuyos ni de un colega)
 
 
   **Tecnologias utilizadas:**
@@ -42,58 +42,58 @@
  **INSTALACIÓN:**
 
   1. Clona el repositorio:
-       git clone https://github.com/Cristhian-valenci/Sprint4.git
-       cd Sprint4
+  - git clone https://github.com/Cristhian-valenci/Sprint4.git
+  - cd Sprint4
 
-  2. Instala dependencias:
-       composer install
-       npm install
-       npm run dev
+  3. Instala dependencias:
+  - composer install
+  - npm install
+  - npm run dev
 
-  3. Genera el archivo .env
-      cp .env.example .env
+  5. Genera el archivo .env
+  - cp .env.example .env
 
-  4. Configura la base de datos en tu archivo .env
-      DB_CONNECTION=mysql
-      DB_HOST=127.0.0.1
-      DB_PORT=3306
-      DB_DATABASE=cocteleando
-      DB_USERNAME=root
-      DB_PASSWORD=
+  6. Configura la base de datos en tu archivo .env
+  - DB_CONNECTION=mysql
+  - DB_HOST=127.0.0.1
+  - DB_PORT=3306
+  - DB_DATABASE=cocteleando
+  - DB_USERNAME=root
+  - DB_PASSWORD=
 
-  5. Configurar Mailtrap (Opcional)
-      MAIL_MAILER=smtp
-      MAIL_HOST=sandbox.smtp.mailtrap.io
-      MAIL_PORT=2525
-      MAIL_USERNAME=354f892f46cc34
-      MAIL_PASSWORD=eca5b443f62c50
-      MAIL_ENCRYPTION=null
-      MAIL_FROM_ADDRESS="no-reply@cocteleando.com"
-      MAIL_FROM_NAME="Cocteleando"
+  7. Configurar Mailtrap (Opcional)
+  - MAIL_MAILER=smtp
+  - MAIL_HOST=sandbox.smtp.mailtrap.io
+  - MAIL_PORT=2525
+  - MAIL_USERNAME=354f892f46cc34
+  - MAIL_PASSWORD=eca5b443f62c50
+  - MAIL_ENCRYPTION=null
+  - MAIL_FROM_ADDRESS="no-reply@cocteleando.com"
+  - MAIL_FROM_NAME="Cocteleando"
 
- 6. Puedes cambiar los mensajes de la web a castellano (Opcional)
-      APP_LOCALE=es
+ 8. Puedes cambiar los mensajes de la web a castellano (Opcional)
+  - APP_LOCALE=es
 
- 7. Genera la clave de la app
-      php artisan key:generate
+ 9. Genera la clave de la app
+  - php artisan key:generate
 
- 8. Ejecuta migraciones y seeders
-      php artisan migrate --seed
+ 10. Ejecuta migraciones y seeders
+  - php artisan migrate --seed
 
- 9. Inicia el servidor backend
-      php artisan serve
+ 11. Inicia el servidor backend
+  - php artisan serve
 
- 10. Inicia el servidor Vite (Frontend)
-      npm run dev
+ 12. Inicia el servidor Vite (Frontend)
+  - npm run dev
 
  **Finalmente ya puedes acceder a la aplicacion!**
-      http://localhost:8000
+  - http://localhost:8000
 
 
 
 **AUTOR:**
-Cristhian Valenci
-email: cristhianvalenci22@gmail.com
-GitHub: https://github.com/Cristhian-Valenci
+  - Cristhian Valenci
+  - email: cristhianvalenci22@gmail.com
+  - GitHub: https://github.com/Cristhian-Valenci
 
     
