@@ -78,4 +78,10 @@ class User extends Authenticatable
       return $this->hasMany(Cocktail::class, 'usuario_id');
     }
 
+    public function ingredients()
+{
+    return $this->hasMany(Ingredient::class); // o el modelo que corresponda
+}
+
+
 }
