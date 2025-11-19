@@ -15,8 +15,8 @@ return new class extends Migration
         $table->id();
         $table->foreignId('cocktail_id')->constrained()->onDelete('cascade');
         $table->foreignId('ingredient_id')->constrained()->onDelete('cascade');
-        $table->decimal('cantidad', 5, 2); // obligatorio
-        $table->enum('unidad', ['cl', 'ml', 'oz', 'dash', 'unidades', 'cucharadas']); // obligatorio
+        $table->decimal('cantidad', 5, 2); 
+        $table->enum('unidad', ['cl', 'ml', 'oz', 'dash', 'unidades', 'cucharadas']); 
     });
     }
 

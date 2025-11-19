@@ -120,11 +120,11 @@ class CocktailsTableSeeder extends Seeder
                 'ingredientes' => [
                     ['nombre' => 'Vodka', 'cantidad' => 50, 'unidad' => 'ml'],
                     ['nombre' => 'Zumo de limón', 'cantidad' => 15, 'unidad' => 'ml'],
-                    ['nombre' => 'Azúcar', 'cantidad' => 1, 'unidad' => 'cucharada'], 
+                    ['nombre' => 'Azúcar', 'cantidad' => 1, 'unidad' => 'cucharadas'], 
                     ['nombre' => 'Zumo de tomate', 'cantidad' => 120, 'unidad' => 'ml'], 
-                    ['nombre' => 'Salsa Perrins', 'cantidad' => 1, 'unidad' => 'cucharada'], 
-                    ['nombre' => 'Sal', 'cantidad' => 1, 'unidad' => 'cucharada'], 
-                    ['nombre' => 'Pimienta', 'cantidad' => 1, 'unidad' => 'cucharada'], 
+                    ['nombre' => 'Salsa Perrins', 'cantidad' => 1, 'unidad' => 'cucharadas'], 
+                    ['nombre' => 'Sal', 'cantidad' => 1, 'unidad' => 'cucharadas'], 
+                    ['nombre' => 'Pimienta', 'cantidad' => 1, 'unidad' => 'cucharadas'], 
                 ],
             ],
             [
@@ -136,7 +136,7 @@ class CocktailsTableSeeder extends Seeder
                    ['nombre' => 'Ron oscuro', 'cantidad' => 30, 'unidad' => 'ml'],
                    ['nombre' => 'Triple Sec', 'cantidad' => 15, 'unidad' => 'ml'],
                    ['nombre' => 'Zumo de lima', 'cantidad' => 15, 'unidad' => 'ml'],
-                   ['nombre' => 'Azúcar', 'cantidad' => 1, 'unidad' => 'cucharada'],
+                   ['nombre' => 'Azúcar', 'cantidad' => 1, 'unidad' => 'cucharadas'],
                 ],
             ],
             [
@@ -146,7 +146,7 @@ class CocktailsTableSeeder extends Seeder
                 'ingredientes' => [
                     ['nombre' => 'Tequila', 'cantidad' => 50, 'unidad' => 'ml'],
                     ['nombre' => 'Zumo de naranja', 'cantidad' => 100, 'unidad' => 'ml'],
-                    ['nombre' => 'Azúcar', 'cantidad' => 1, 'unidad' => 'cucharada'], 
+                    ['nombre' => 'Azúcar', 'cantidad' => 1, 'unidad' => 'cucharadas'], 
                 ],
             ],
             [
@@ -198,18 +198,31 @@ class CocktailsTableSeeder extends Seeder
             );
 
             // 4️⃣ Asociar ingredientes
-            foreach ($data['ingredientes'] as $ing) {
-                $ingredient = Ingredient::where('nombre', $ing['nombre'])->first();
+               foreach ($data['ingredientes'] as $ing) {
+                  $ingredient = Ingredient::where('nombre', $ing['nombre'])->first();
 
-                if ($ingredient) {
-                    $cocktail->ingredients()->syncWithoutDetaching([
+                    if ($ingredient) {
+                      // Mapa de correcciones de unidades
+                      $unidadCorrecciones = [
+                           'cucharada' => 'cucharadas',
+                            // puedes agregar más aquí si hace falta
+                        ];
+
+                           // Normalizar unidad
+                       $unidad = $ing['unidad'];
+                       if (isset($unidadCorrecciones[$unidad])) {
+                          $unidad = $unidadCorrecciones[$unidad];
+                        }
+
+                        $cocktail->ingredients()->syncWithoutDetaching([
                         $ingredient->id => [
-                            'cantidad' => $ing['cantidad'],
-                            'unidad' => $ing['unidad'],
+                           'cantidad' => $ing['cantidad'],
+                           'unidad' => $unidad,
                         ],
-                    ]);
+                   ]);
                 }
-            }
+                }
+
         }
 
         $this->command->info('Cócteles creados correctamente.');
