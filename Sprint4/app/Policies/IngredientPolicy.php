@@ -37,6 +37,9 @@ class IngredientPolicy
      */
     public function update(User $user, Ingredient $ingredient): bool
     {
+        if ($ingredient->user_id !== $user->id) {
+            return false;
+        }
              $usedByOther = $ingredient->cocktails
                                ->where('usuario_id', '!=', $user->id)
                                ->count() > 0;
@@ -48,6 +51,9 @@ class IngredientPolicy
      */
     public function delete(User $user, Ingredient $ingredient): bool
     {
+        if ($ingredient->user_id !== $user->id) {
+            return false;
+        }
             $usedByOther = $ingredient->cocktails
                                ->where('usuario_id', '!=', $user->id) //solo si el ususario que creo ese ingrediente es distinto a cualquier otro ususario
                                ->count() > 0; //y hay mas de uno
