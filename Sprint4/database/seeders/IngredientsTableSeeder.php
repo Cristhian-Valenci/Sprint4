@@ -17,7 +17,13 @@ class IngredientsTableSeeder extends Seeder
 
     public function run(): void
     {
-        $user = User::where('email', 'ceo@ceo.com')->first();
+        $user = \App\Models\User::firstOrCreate(
+           ['email' => 'ceo@ceo.com'],
+           [
+              'name' => 'CEO',
+              'password' => bcrypt('password'),
+           ]
+        );
 
         $ingredients = [
             'Ron blanco',
@@ -38,13 +44,19 @@ class IngredientsTableSeeder extends Seeder
             'Zumo de naranja',
             'Zumo de arándanos',
             'Zumo de pomelo',
+            'Zumo de tomate',
             'Azúcar',
             'Soda',
             'Menta',
             'Angostura',
             'Ginger beer',
             'Tonica',
-            'Coca Cola'
+            'Coca Cola',
+            'Sal',
+            'Pimienta',
+            'Salsa Perrins',
+            'Pisco',
+            'Whiskey'
         ];
          
         foreach ($ingredients as $name) {
